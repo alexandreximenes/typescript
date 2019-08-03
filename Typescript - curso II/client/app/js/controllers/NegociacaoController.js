@@ -1,8 +1,4 @@
-import { NegociacoesView } from '../views/NegociacoesView';
-import { MensagemView } from '../views/MensagemView';
-import { Negociacoes } from '../models/Negociacoes';
-import { Negociacao } from '../models/Negociacao';
-export class NegociacaoController {
+class NegociacaoController {
     constructor() {
         this._negociacoes = new Negociacoes();
         this._negociacoesView = new NegociacoesView('#negociacoesView');
@@ -11,6 +7,19 @@ export class NegociacaoController {
         this._inputQuantidade = document.querySelector('#quantidade');
         this._inputValor = document.querySelector('#valor');
         this._negociacoesView.update(this._negociacoes);
+    }
+    importaDados(event) {
+        function isOk(res) {
+            if (res.ok) {
+                return res;
+            }
+            else {
+                throw new Error('Algo ocorreu de errado na requisição');
+            }
+        }
+        fetch('http://localhost:8080/dados')
+            .then(res => isOk(res))
+            .then(res => console.log(res.json));
     }
     adiciona(event) {
         event.preventDefault();

@@ -1,9 +1,7 @@
-import { NegociacoesView } from '../views/NegociacoesView';
-import { MensagemView } from '../views/MensagemView';
-import { Negociacoes } from '../models/Negociacoes';
-import { Negociacao } from '../models/Negociacao';
+//import { MensagemView } from '../views/MensagemView';
+//import { NegociacoesView } from '../views/NegociacoesView';
 
-export class NegociacaoController{
+class NegociacaoController{
 
     private _inputData: HTMLInputElement;
     private _inputQuantidade: HTMLInputElement;
@@ -13,12 +11,32 @@ export class NegociacaoController{
     private _mensagemView = new MensagemView('#mensagemView');
 
     constructor(){
-        this._inputData = document.querySelector('#data');
-        this._inputQuantidade = document.querySelector('#quantidade');
-        this._inputValor = document.querySelector('#valor');
+        this._inputData = <HTMLInputElement>document.querySelector('#data');
+        this._inputQuantidade = <HTMLInputElement>document.querySelector('#quantidade');
+        this._inputValor = <HTMLInputElement>document.querySelector('#valor');
         this._negociacoesView.update(this._negociacoes);
     }
+
     
+    importaDados(event: Event){
+        
+        function isOk(res: Response){
+            if(res.ok){
+                return res;
+            }else{
+                throw new Error('Algo ocorreu de errado na requisição');
+            }
+        }
+
+        fetch('http://localhost:8080/dados')
+        .then(res => isOk(res))
+        .then(res => res.json)
+        .then((dados : NegociacaoParcial[]) => {
+                .map(dado => new Negociacao(new Date(), dado.vezes, dado.montante))
+                .forEach(negociacao => this._negociacoes.adiciona(negociacao))
+                this._mensagemView.update(this._negociacoes);
+        }).catch(err => console.log(err));
+    }
     adiciona(event: Event){
         event.preventDefault();
         let negociacao = new Negociacao(

@@ -1,5 +1,4 @@
-import { Negociacao } from '../models/Negociacao';
-export class Negociacoes{
+class Negociacoes{
 
     // private _negociacoes : Array<Negociacao> = [];
     private _negociacoes : Negociacao[] = [];
